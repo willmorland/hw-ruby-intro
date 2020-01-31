@@ -41,21 +41,7 @@ def sum_to_n?(arr, n)
     return false;
   end
   
-  i = 0;
-  j = 0;
-  arr.each { |it1|
-    arr.each { |it2|
-      #puts it1+it2;
-      if((it1+it2) == n)
-        if(i != j)
-          return true;
-        end
-      end
-      j += 1;
-    }
-    i += 1;
-  }
-  return false;
+  return arr.permutation(2).any? { |a, b| a + b == n }
 end
 
 # Part 2
@@ -77,12 +63,32 @@ def starts_with_consonant?(s)
 end
 
 def binary_multiple_of_4? s
-  # YOUR CODE HERE
+  if(s.length < 3)
+    if(s=='0')
+      return true;
+    end
+    return false;
+  end
+  
+  array = s.split('');
+  array.each { |item|
+    if((item!='1')&&(item!='0'))
+      return false;
+    end
+  }
+  
+  ending = s[-2..-1];
+  if((ending[0] == '0') && (ending[1] == '0'))
+    return true;
+  else
+    return false;
+  end
 end
 
-array ='v';
+#array ='100100';
 #puts sum_to_n?(array,0);
-puts starts_with_consonant?(array);
+#puts starts_with_consonant?(array);
+#puts binary_multiple_of_4?(array);
 
 
 # Part 3
@@ -91,8 +97,38 @@ class BookInStock
   @isbn;
   @price;
   def initialize(isbn, price)
+    raise ArgumentError.new(
+    "Expected a non-empty string"
+  ) if isbn.length == 0
+  
+  raise ArgumentError.new(
+    "Expected a positive price"
+  ) if price <= 0
     @isbn = isbn;
     @price = price;
   end
+  
+  def isbn
+    @isbn;
+  end
+  
+  def price
+    @price;
+  end
+  
+  def isbn=(isbn)
+    @isbn = isbn
+  end
+  
+  def price=(price)
+    @price = price
+  end
+  
+  def price_as_string
+    return "$" + sprintf("%.2f", @price)
+  end
 # YOUR CODE HERE
 end
+
+book = BookInStock.new('12345', 3.90)
+book.price_as_string;
